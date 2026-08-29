@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Web OS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Part 1: Welcome Screen -->
+  <div id="welcome-screen" class="screen">
+    <div class="card">
+      <h1>Welcome to My OS</h1>
+      <p>Explore my personal interactive web portfolio.</p>
+      <button id="enter-btn">Enter OS</button>
+    </div>
+  </div>
+
+  <!-- Main OS Environment -->
+  <div id="desktop" class="hidden">
+    
+    <!-- Part 2: Top Bar with Date & Clock -->
+    <header class="top-bar">
+      <div class="os-logo">WebOS</div>
+      <div class="top-bar-right">
+        <span id="date"></span>
+        <span id="clock">00:00:00 AM</span>
+      </div>
+    </header>
+
+    <!-- Centered Welcome Message -->
+    <div class="center-text">
+      hey its piyushoutthere
+    </div>
+
+    <!-- Desktop Workspace & Icons -->
+    <main class="workspace">
+      <!-- About Me App -->
+      <div class="icon" id="open-app-1">
+        <div class="icon-img">📁</div>
+        <span>About Me</span>
+      </div>
+
+      <!-- Working Notes App -->
+      <div class="icon" id="open-notes">
+        <div class="icon-img">📝</div>
+        <span>Notes</span>
+      </div>
+
+      <!-- Settings App -->
+      <div class="icon" id="open-app-2">
+        <div class="icon-img">⚙️</div>
+        <span>Settings</span>
+      </div>
+    </main>
+
+    <!-- App Window -->
+    <div id="app-window" class="window hidden">
+      <div class="window-header" id="window-header">
+        <span id="window-title">App Window</span>
+        <button id="close-btn">&times;</button>
+      </div>
+      <div class="window-content" id="window-content">
+        <!-- Dynamic Content -->
+      </div>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
