@@ -1,23 +1,21 @@
-# Personal WebOS
+# My Web OS
 
-A web-based interactive operating system built with HTML, CSS, and vanilla JavaScript.
+I built a web-based operating system using HTML, CSS, and JavaScript as part of the Hack Club WebOS jam. It mimics a desktop UI directly inside the browser.
 
-## 🚀 Live Demo
-[View Live Demo](https://piyushoutthere-spec.github.io/webos/)
+## Live Demo
+Check out the site here: https://piyushoutthere-spec.github.io/webos/
 
-## ✨ Features
-- **Welcome Screen**: Custom entry page.
-- **Top Bar**: Real-time clock and live date display.
-- **Draggable Windows**: Interactive app windows that can be moved around the desktop.
-- **Notes App**: Working text editor that retains typed content.
-- **Desktop Apps**: Quick-launch icons for About Me, Notes, and Settings.
+## How I Built It
+- **Welcome Screen**: Created a lock screen with an "Enter OS" button that unlocks the desktop.
+- **Top Bar**: Displays a live clock and date using JavaScript `setInterval()`.
+- **Desktop Interactivity**: Added interactive icons for apps like About Me, Settings, and a Notes app.
+- **Draggable Windows**: Wrote event listeners in JS (`mousedown`, `mousemove`, `mouseup`) to make the app windows draggable across the screen.
+- **Dynamic Wallpapers**: Used the Picsum API so a random wallpaper loads every time the page refreshes.
 
-## 🛠️ Built With
-- **HTML5** - Structure
-- **CSS3** - Styling & Layouts
-- **JavaScript (ES6)** - Window logic & interactivity
+## Tech Stack
+- HTML5
+- CSS3
+- Vanilla JavaScript
 
-## 💻 How to Run Locally
-1. Clone this repository:
-   ```bash
-   git clone [https://github.com/piyushoutthere-spec/webos.git](https://github.com/piyushoutthere-spec/webos.git)
+## Running Locally
+Just open `index.html` in any web browser or open it using VS Code Live Server.
