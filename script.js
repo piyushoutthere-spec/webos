@@ -1,15 +1,11 @@
-// piyush's webos script
-// made for hack club stardance!
-
+// WebOS main script - simple implementation
 document.addEventListener('DOMContentLoaded', () => {
 
-  // grab main elements
+  // Lock Screen
   const enterBtn = document.getElementById('enter-btn');
   const welcomeScreen = document.getElementById('welcome-screen');
   const desktop = document.getElementById('desktop');
-  const winContainer = document.getElementById('windows-container');
 
-  // lockscreen enter button
   if (enterBtn) {
     enterBtn.addEventListener('click', () => {
       welcomeScreen.classList.add('hidden');
@@ -17,11 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // random bg wallpaper
-  const randomPic = Math.floor(Math.random() * 200) + 1;
-  desktop.style.backgroundImage = 'url("https://picsum.photos/1920/1080?random=' + randomPic + '")';
-
-  // theme toggle (dark/light)
+  // Theme Switcher
   const themeBtn = document.getElementById('theme-toggle');
   if (themeBtn) {
     themeBtn.addEventListener('click', () => {
@@ -29,235 +21,296 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // clock update logic
-  function startClock() {
+  // Clock
+  function renderClock() {
     const clock = document.getElementById('clock');
     const date = document.getElementById('date');
-    const d = new Date();
-    
-    if (clock) clock.textContent = d.toLocaleTimeString();
-    if (date) date.textContent = d.toLocaleDateString();
+    const now = new Date();
+    if (clock) clock.textContent = now.toLocaleTimeString();
+    if (date) date.textContent = now.toLocaleDateString();
   }
-  setInterval(startClock, 1000);
-  startClock();
+  setInterval(renderClock, 1000);
+  renderClock();
 
-  // window manager & drag handler
-  let zIndex = 5;
-  let savedNotesText = "";
+  // Simple Window Manager
+  const container = document.getElementById('windows-container');
+  let topZ = 10;
+  let savedNoteText = '';
 
-  function spawnWindow(id, title, htmlContent) {
-    // check if win already open
-    let oldWin = document.getElementById('win-' + id);
-    if (oldWin) {
-      zIndex++;
-      oldWin.style.zIndex = zIndex;
-      return oldWin;
+  function createWin(id, title, contentHtml) {
+    let existing = document.getElementById('win-' + id);
+    if (existing) {
+      topZ++;
+      existing.style.zIndex = topZ;
+      return existing;
     }
 
-    // make new window element
     const win = document.createElement('div');
     win.id = 'win-' + id;
     win.className = 'window';
-    win.style.left = '80px';
-    win.style.top = '60px';
-    zIndex++;
-    win.style.zIndex = zIndex;
+    win.style.left = '60px';
+    win.style.top = '50px';
+    topZ++;
+    win.style.zIndex = topZ;
 
     win.innerHTML = `
       <div class="window-header">
         <span>${title}</span>
         <button class="close-btn">X</button>
       </div>
-      <div class="window-content">${htmlContent}</div>
+      <div class="window-content">${contentHtml}</div>
     `;
 
-    // click window to bring to top
-    win.addEventListener('mousedown', function() {
-      zIndex++;
-      win.style.zIndex = zIndex;
+    win.addEventListener('mousedown', () => {
+      topZ++;
+      win.style.zIndex = topZ;
     });
 
-    // close button listener
-    win.querySelector('.close-btn').addEventListener('click', function() {
+    win.querySelector('.close-btn').addEventListener('click', () => {
       win.remove();
     });
 
-    // dragging function
+    // Dragging
     const header = win.querySelector('.window-header');
-    let isDragging = false;
-    let px = 0;
-    let py = 0;
+    let dragging = false;
+    let offsetX = 0;
+    let offsetY = 0;
 
-    header.addEventListener('mousedown', function(e) {
-      isDragging = true;
-      px = e.clientX - win.offsetLeft;
-      py = e.clientY - win.offsetTop;
+    header.addEventListener('mousedown', (e) => {
+      dragging = true;
+      offsetX = e.clientX - win.offsetLeft;
+      offsetY = e.clientY - win.offsetTop;
     });
 
-    document.addEventListener('mousemove', function(e) {
-      if (isDragging) {
-        win.style.left = (e.clientX - px) + 'px';
-        win.style.top = (e.clientY - py) + 'px';
+    document.addEventListener('mousemove', (e) => {
+      if (dragging) {
+        win.style.left = (e.clientX - offsetX) + 'px';
+        win.style.top = (e.clientY - offsetY) + 'px';
       }
     });
 
-    document.addEventListener('mouseup', function() {
-      isDragging = false;
+    document.addEventListener('mouseup', () => {
+      dragging = false;
     });
 
-    winContainer.appendChild(win);
+    container.appendChild(win);
     return win;
   }
 
-  // APP LAUNCHERS
-
-  // 1. About
-  document.getElementById('open-app-about')?.addEventListener('click', function() {
-    spawnWindow('about', 'About Me', '<h3>Piyush OS</h3><p>Hey! Welcome to my custom web OS setup.</p>');
+  // APP 1: About
+  document.getElementById('open-app-about')?.addEventListener('click', () => {
+    createWin('about', 'About Me', '<h3>Piyush WebOS</h3><p>Simple browser OS built with JS, HTML, CSS.</p>');
   });
 
-  // 2. Notes
-  document.getElementById('open-app-notes')?.addEventListener('click', function() {
-    const win = spawnWindow('notes', 'Notes', '<textarea id="note-box" class="notes-area">' + savedNotesText + '</textarea>');
-    const box = win.querySelector('#note-box');
-    box?.addEventListener('input', function() {
-      savedNotesText = box.value;
-    });
+  // APP 2: Notes
+  document.getElementById('open-app-notes')?.addEventListener('click', () => {
+    const win = createWin('notes', 'Notes', `<textarea id="note-input" class="notes-area">${savedNoteText}</textarea>`);
+    const area = win.querySelector('#note-input');
+    area?.addEventListener('input', () => { savedNoteText = area.value; });
   });
 
-  // 3. Calculator
-  document.getElementById('open-app-calc')?.addEventListener('click', function() {
+  // APP 3: Calculator
+  document.getElementById('open-app-calc')?.addEventListener('click', () => {
     const calcMarkup = `
-      <div class="calc-screen" id="calc-out">0</div>
+      <div class="calc-screen" id="c-disp">0</div>
       <div class="calc-grid">
-        <button class="calc-btn" id="c-clr">C</button>
-        <button class="calc-btn btn-click">/</button>
-        <button class="calc-btn btn-click">*</button>
-        <button class="calc-btn btn-click">-</button>
-        <button class="calc-btn btn-click">7</button>
-        <button class="calc-btn btn-click">8</button>
-        <button class="calc-btn btn-click">9</button>
-        <button class="calc-btn btn-click">+</button>
-        <button class="calc-btn btn-click">4</button>
-        <button class="calc-btn btn-click">5</button>
-        <button class="calc-btn btn-click">6</button>
-        <button class="calc-btn" id="c-ans">=</button>
-        <button class="calc-btn btn-click">1</button>
-        <button class="calc-btn btn-click">2</button>
-        <button class="calc-btn btn-click">3</button>
-        <button class="calc-btn btn-click">0</button>
+        <button class="calc-btn" id="c-reset">C</button>
+        <button class="calc-btn calc-op">/</button>
+        <button class="calc-btn calc-op">*</button>
+        <button class="calc-btn calc-op">-</button>
+        <button class="calc-btn calc-op">7</button>
+        <button class="calc-btn calc-op">8</button>
+        <button class="calc-btn calc-op">9</button>
+        <button class="calc-btn calc-op">+</button>
+        <button class="calc-btn calc-op">4</button>
+        <button class="calc-btn calc-op">5</button>
+        <button class="calc-btn calc-op">6</button>
+        <button class="calc-btn" id="c-run">=</button>
+        <button class="calc-btn calc-op">1</button>
+        <button class="calc-btn calc-op">2</button>
+        <button class="calc-btn calc-op">3</button>
+        <button class="calc-btn calc-op">0</button>
       </div>
     `;
-    const win = spawnWindow('calc', 'Calculator', calcMarkup);
-    const screen = win.querySelector('#calc-out');
+    const win = createWin('calc', 'Calculator', calcMarkup);
+    const disp = win.querySelector('#c-disp');
     
-    win.querySelectorAll('.calc-btn').forEach(function(b) {
-      b.addEventListener('click', function() {
-        if (b.id === 'c-clr') {
-          screen.textContent = '0';
-        } else if (b.id === 'c-ans') {
-          try {
-            screen.textContent = eval(screen.textContent);
-          } catch(err) {
-            screen.textContent = 'Error';
-          }
+    win.querySelectorAll('.calc-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.id === 'c-reset') {
+          disp.textContent = '0';
+        } else if (btn.id === 'c-run') {
+          try { disp.textContent = eval(disp.textContent); } 
+          catch (e) { disp.textContent = 'Error'; }
         } else {
-          if (screen.textContent === '0' || screen.textContent === 'Error') {
-            screen.textContent = b.textContent;
+          if (disp.textContent === '0' || disp.textContent === 'Error') {
+            disp.textContent = btn.textContent;
           } else {
-            screen.textContent += b.textContent;
+            disp.textContent += btn.textContent;
           }
         }
       });
     });
   });
 
-  // 4. Terminal
-  document.getElementById('open-app-terminal')?.addEventListener('click', function() {
+  // APP 4: Terminal
+  document.getElementById('open-app-terminal')?.addEventListener('click', () => {
     const termMarkup = `
       <div class="terminal-body">
-        <p>Type "help" to see commands.</p>
-        <div id="logs"></div>
+        <p>Type "help" for commands.</p>
+        <div id="t-logs"></div>
         <div class="terminal-input-line">
           <span>$</span>
-          <input type="text" id="cmd-input" class="terminal-input" />
+          <input type="text" id="t-cmd" class="terminal-input" />
         </div>
       </div>
     `;
-    const win = spawnWindow('terminal', 'Terminal', termMarkup);
-    const input = win.querySelector('#cmd-input');
-    const logs = win.querySelector('#logs');
+    const win = createWin('terminal', 'Terminal', termMarkup);
+    const input = win.querySelector('#t-cmd');
+    const logs = win.querySelector('#t-logs');
 
-    input?.addEventListener('keydown', function(e) {
+    input?.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        const text = input.value.trim();
+        const txt = input.value.trim();
         let res = '';
+        if (txt === 'help') res = 'Commands: help, date, clear';
+        else if (txt === 'date') res = new Date().toLocaleString();
+        else if (txt === 'clear') { logs.innerHTML = ''; input.value = ''; return; }
+        else if (txt) res = 'Unknown: ' + txt;
 
-        if (text === 'help') res = 'Commands available: help, date, whoami, clear';
-        else if (text === 'date') res = new Date().toString();
-        else if (text === 'whoami') res = 'piyushoutthere';
-        else if (text === 'clear') { logs.innerHTML = ''; input.value = ''; return; }
-        else if (text !== '') res = 'Unknown command: ' + text;
-
-        logs.innerHTML += '<div>$ ' + text + '</div><div>' + res + '</div>';
+        logs.innerHTML += `<div>$ ${txt}</div><div>${res}</div>`;
         input.value = '';
       }
     });
   });
 
-  // 5. Tic Tac Toe
-  document.getElementById('open-app-ttt')?.addEventListener('click', function() {
-    const tttMarkup = `
-      <div class="ttt-container">
-        <div id="game-status">Player X turn</div>
-        <div class="ttt-grid">
-          <div class="ttt-cell" data-num="0"></div>
-          <div class="ttt-cell" data-num="1"></div>
-          <div class="ttt-cell" data-num="2"></div>
-          <div class="ttt-cell" data-num="3"></div>
-          <div class="ttt-cell" data-num="4"></div>
-          <div class="ttt-cell" data-num="5"></div>
-          <div class="ttt-cell" data-num="6"></div>
-          <div class="ttt-cell" data-num="7"></div>
-          <div class="ttt-cell" data-num="8"></div>
-        </div>
-        <button class="ttt-reset" id="reset-btn">Reset</button>
+  // APP 5: Working Timer / Stopwatch
+  document.getElementById('open-app-timer')?.addEventListener('click', () => {
+    const timerMarkup = `
+      <div style="text-align: center; padding: 10px;">
+        <h2 id="timer-display">0s</h2>
+        <button id="start-timer">Start</button>
+        <button id="stop-timer">Stop</button>
+        <button id="reset-timer">Reset</button>
       </div>
     `;
-    const win = spawnWindow('ttt', 'Tic-Tac-Toe', tttMarkup);
-    let currentTurn = 'X';
-    let grid = ['', '', '', '', '', '', '', '', ''];
+    const win = createWin('timer', 'Timer', timerMarkup);
+    let seconds = 0;
+    let timerRef = null;
 
-    const cells = win.querySelectorAll('.ttt-cell');
-    const status = win.querySelector('#game-status');
+    const display = win.querySelector('#timer-display');
+    win.querySelector('#start-timer').addEventListener('click', () => {
+      if (!timerRef) {
+        timerRef = setInterval(() => {
+          seconds++;
+          display.textContent = seconds + 's';
+        }, 1000);
+      }
+    });
+    win.querySelector('#stop-timer').addEventListener('click', () => {
+      clearInterval(timerRef);
+      timerRef = null;
+    });
+    win.querySelector('#reset-timer').addEventListener('click', () => {
+      clearInterval(timerRef);
+      timerRef = null;
+      seconds = 0;
+      display.textContent = '0s';
+    });
+  });
 
-    cells.forEach(function(cell) {
-      cell.addEventListener('click', function() {
-        const num = cell.getAttribute('data-num');
-        if (grid[num] === '') {
-          grid[num] = currentTurn;
-          cell.textContent = currentTurn;
-          currentTurn = (currentTurn === 'X') ? 'O' : 'X';
-          status.textContent = 'Player ' + currentTurn + ' turn';
+  // APP 6: Working Snake Game
+  document.getElementById('open-app-snake')?.addEventListener('click', () => {
+    const snakeMarkup = `
+      <div style="text-align:center;">
+        <canvas id="snakeCanvas" width="200" height="200" style="background:#000; display:block; margin:auto;"></canvas>
+        <p>Use Arrow Keys to move</p>
+      </div>
+    `;
+    const win = createWin('snake', 'Snake Game', snakeMarkup);
+    const canvas = win.querySelector('#snakeCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let snake = [{x: 10, y: 10}];
+    let food = {x: 5, y: 5};
+    let dx = 1, dy = 0;
+
+    function gameLoop() {
+      if (!document.getElementById('win-snake')) return;
+
+      let head = {x: snake[0].x + dx, y: snake[0].y + dy};
+      
+      // Wrap wall
+      if (head.x < 0) head.x = 19;
+      if (head.x >= 20) head.x = 0;
+      if (head.y < 0) head.y = 19;
+      if (head.y >= 20) head.y = 0;
+
+      snake.unshift(head);
+
+      if (head.x === food.x && head.y === food.y) {
+        food = {Math.floor(Math.random()*20), Math.floor(Math.random()*20)};
+      } else {
+        snake.pop();
+      }
+
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, 200, 200);
+
+      ctx.fillStyle = 'red';
+      ctx.fillRect(food.x * 10, food.y * 10, 8, 8);
+
+      ctx.fillStyle = 'lime';
+      snake.forEach(part => {
+        ctx.fillRect(part.x * 10, part.y * 10, 8, 8);
+      });
+    }
+
+    const interval = setInterval(gameLoop, 150);
+
+    const handleKeys = (e) => {
+      if (e.key === 'ArrowUp' && dy === 0) { dx = 0; dy = -1; }
+      if (e.key === 'ArrowDown' && dy === 0) { dx = 0; dy = 1; }
+      if (e.key === 'ArrowLeft' && dx === 0) { dx = -1; dy = 0; }
+      if (e.key === 'ArrowRight' && dx === 0) { dx = 1; dy = 0; }
+    };
+
+    document.addEventListener('keydown', handleKeys);
+  });
+
+  // APP 7: Tic-Tac-Toe
+  document.getElementById('open-app-ttt')?.addEventListener('click', () => {
+    const tttMarkup = `
+      <div class="ttt-container">
+        <div id="ttt-status">Turn: X</div>
+        <div class="ttt-grid">
+          <div class="ttt-cell" data-i="0"></div>
+          <div class="ttt-cell" data-i="1"></div>
+          <div class="ttt-cell" data-i="2"></div>
+          <div class="ttt-cell" data-i="3"></div>
+          <div class="ttt-cell" data-i="4"></div>
+          <div class="ttt-cell" data-i="5"></div>
+          <div class="ttt-cell" data-i="6"></div>
+          <div class="ttt-cell" data-i="7"></div>
+          <div class="ttt-cell" data-i="8"></div>
+        </div>
+      </div>
+    `;
+    const win = createWin('ttt', 'Tic-Tac-Toe', tttMarkup);
+    let turn = 'X';
+    let board = Array(9).fill('');
+
+    win.querySelectorAll('.ttt-cell').forEach(cell => {
+      cell.addEventListener('click', () => {
+        const idx = cell.getAttribute('data-i');
+        if (!board[idx]) {
+          board[idx] = turn;
+          cell.textContent = turn;
+          turn = turn === 'X' ? 'O' : 'X';
+          win.querySelector('#ttt-status').textContent = 'Turn: ' + turn;
         }
       });
     });
-
-    win.querySelector('#reset-btn')?.addEventListener('click', function() {
-      grid = ['', '', '', '', '', '', '', '', ''];
-      currentTurn = 'X';
-      status.textContent = 'Player X turn';
-      cells.forEach(function(c) { c.textContent = ''; });
-    });
-  });
-
-  // 6. Weather & Settings
-  document.getElementById('open-app-weather')?.addEventListener('click', function() {
-    spawnWindow('weather', 'Weather', '<h3>Weather Widget</h3><p>Current: 24°C, Sunny</p>');
-  });
-
-  document.getElementById('open-app-settings')?.addEventListener('click', function() {
-    spawnWindow('settings', 'Settings', '<h3>System Settings</h3><p>WebOS v1.0 running normally.</p>');
   });
 
 });
