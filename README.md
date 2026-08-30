@@ -1,11 +1,6 @@
-# My WebOS
-
-A custom personal OS website made for Hack Club Stardance!
-
-## What's included:
-- Desktop interface with clock and dynamic background
-- Windows you can drag, open, and close
-- Apps: Notes, Calculator, Terminal, Tic-Tac-Toe, Timer, Weather
-
-## How to run:
-Just open `index.html` in your browser.
+This my webos guys!
+I have done this using html, CSS for styling, and javascript to make stuff draggable.
+its very simple , neat , decent.
+I added calsy and games and a weather app too!
+Thank youu!
+This is my readme cause of no AI lol!
