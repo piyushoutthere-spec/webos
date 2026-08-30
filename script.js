@@ -1,7 +1,7 @@
-// WebOS main script - simple implementation
+// WebOS main script - simple hand-written logic
 document.addEventListener('DOMContentLoaded', () => {
 
-  // Lock Screen
+  // 1. Lock Screen & Setup
   const enterBtn = document.getElementById('enter-btn');
   const welcomeScreen = document.getElementById('welcome-screen');
   const desktop = document.getElementById('desktop');
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Clock
+  // Top Bar Clock
   function renderClock() {
     const clock = document.getElementById('clock');
     const date = document.getElementById('date');
@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(renderClock, 1000);
   renderClock();
 
-  // Simple Window Manager
+  // 2. Simple Window System
   const container = document.getElementById('windows-container');
   let topZ = 10;
   let savedNoteText = '';
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       win.remove();
     });
 
-    // Dragging
+    // Window Dragging Logic
     const header = win.querySelector('.window-header');
     let dragging = false;
     let offsetX = 0;
@@ -97,19 +97,19 @@ document.addEventListener('DOMContentLoaded', () => {
     return win;
   }
 
-  // APP 1: About
+  // APP 1: About App
   document.getElementById('open-app-about')?.addEventListener('click', () => {
     createWin('about', 'About Me', '<h3>Piyush WebOS</h3><p>Simple browser OS built with JS, HTML, CSS.</p>');
   });
 
-  // APP 2: Notes
+  // APP 2: Notes App
   document.getElementById('open-app-notes')?.addEventListener('click', () => {
     const win = createWin('notes', 'Notes', `<textarea id="note-input" class="notes-area">${savedNoteText}</textarea>`);
     const area = win.querySelector('#note-input');
     area?.addEventListener('input', () => { savedNoteText = area.value; });
   });
 
-  // APP 3: Calculator
+  // APP 3: Calculator App
   document.getElementById('open-app-calc')?.addEventListener('click', () => {
     const calcMarkup = `
       <div class="calc-screen" id="c-disp">0</div>
@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // APP 4: Terminal
+  // APP 4: Terminal App
   document.getElementById('open-app-terminal')?.addEventListener('click', () => {
     const termMarkup = `
       <div class="terminal-body">
@@ -184,14 +184,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // APP 5: Working Timer / Stopwatch
+  // APP 5: WORKING TIMER & STOPWATCH
   document.getElementById('open-app-timer')?.addEventListener('click', () => {
     const timerMarkup = `
-      <div style="text-align: center; padding: 10px;">
-        <h2 id="timer-display">0s</h2>
-        <button id="start-timer">Start</button>
-        <button id="stop-timer">Stop</button>
-        <button id="reset-timer">Reset</button>
+      <div style="text-align: center; padding: 15px;">
+        <h2 id="timer-display" style="font-size: 32px; margin: 10px 0;">0s</h2>
+        <button id="start-timer" style="padding: 5px 10px;">Start</button>
+        <button id="stop-timer" style="padding: 5px 10px;">Stop</button>
+        <button id="reset-timer" style="padding: 5px 10px;">Reset</button>
       </div>
     `;
     const win = createWin('timer', 'Timer', timerMarkup);
@@ -219,12 +219,50 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // APP 6: Working Snake Game
+  // APP 6: WORKING MUSIC PLAYER (Synth Tone Synthesizer)
+  document.getElementById('open-app-music')?.addEventListener('click', () => {
+    const musicMarkup = `
+      <div style="text-align: center; padding: 15px;">
+        <h3>WebOS Synth Player</h3>
+        <p id="music-status">Status: Stopped</p>
+        <button id="play-synth" style="padding: 8px 15px; margin-right: 5px;">Play Synth Tone</button>
+        <button id="stop-synth" style="padding: 8px 15px;">Stop Tone</button>
+      </div>
+    `;
+    const win = createWin('music', 'Music Player', musicMarkup);
+    const status = win.querySelector('#music-status');
+    let audioCtx = null;
+    let oscillator = null;
+
+    win.querySelector('#play-synth').addEventListener('click', () => {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        oscillator = audioCtx.createOscillator();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // 440 Hz (Note A4)
+        oscillator.connect(audioCtx.destination);
+        oscillator.start();
+        status.textContent = 'Status: Playing 440Hz Tone 🎵';
+      }
+    });
+
+    win.querySelector('#stop-synth').addEventListener('click', () => {
+      if (audioCtx) {
+        oscillator.stop();
+        audioCtx.close();
+        audioCtx = null;
+        oscillator = null;
+        status.textContent = 'Status: Stopped';
+      }
+    });
+  });
+
+  // APP 7: WORKING SNAKE GAME
   document.getElementById('open-app-snake')?.addEventListener('click', () => {
     const snakeMarkup = `
-      <div style="text-align:center;">
-        <canvas id="snakeCanvas" width="200" height="200" style="background:#000; display:block; margin:auto;"></canvas>
-        <p>Use Arrow Keys to move</p>
+      <div style="text-align:center; padding: 10px;">
+        <canvas id="snakeCanvas" width="200" height="200" style="background:#000; border:1px solid #fff; display:block; margin:auto;"></canvas>
+        <p style="margin-top: 5px; font-size: 12px;">Use Arrow Keys to Controls</p>
       </div>
     `;
     const win = createWin('snake', 'Snake Game', snakeMarkup);
@@ -239,8 +277,8 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!document.getElementById('win-snake')) return;
 
       let head = {x: snake[0].x + dx, y: snake[0].y + dy};
-      
-      // Wrap wall
+
+      // Wrap-around grid borders
       if (head.x < 0) head.x = 19;
       if (head.x >= 20) head.x = 0;
       if (head.y < 0) head.y = 19;
@@ -248,18 +286,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
       snake.unshift(head);
 
+      // Check food collision
       if (head.x === food.x && head.y === food.y) {
-        food = {Math.floor(Math.random()*20), Math.floor(Math.random()*20)};
+        food = {
+          x: Math.floor(Math.random() * 20),
+          y: Math.floor(Math.random() * 20)
+        };
       } else {
         snake.pop();
       }
 
+      // Render background canvas
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, 200, 200);
 
+      // Render Food
       ctx.fillStyle = 'red';
       ctx.fillRect(food.x * 10, food.y * 10, 8, 8);
 
+      // Render Snake Body
       ctx.fillStyle = 'lime';
       snake.forEach(part => {
         ctx.fillRect(part.x * 10, part.y * 10, 8, 8);
@@ -278,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', handleKeys);
   });
 
-  // APP 7: Tic-Tac-Toe
+  // APP 8: Tic-Tac-Toe
   document.getElementById('open-app-ttt')?.addEventListener('click', () => {
     const tttMarkup = `
       <div class="ttt-container">
