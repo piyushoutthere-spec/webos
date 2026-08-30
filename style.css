@@ -6,6 +6,20 @@
   user-select: none;
 }
 
+:root {
+  --topbar-bg: rgba(0, 0, 0, 0.5);
+  --topbar-text: #ffffff;
+  --window-bg: rgba(255, 255, 255, 0.95);
+  --window-text: #333333;
+}
+
+body.light-theme {
+  --topbar-bg: rgba(255, 255, 255, 0.85);
+  --topbar-text: #111111;
+  --window-bg: rgba(240, 240, 240, 0.95);
+  --window-text: #111111;
+}
+
 body, html {
   width: 100%;
   height: 100%;
@@ -51,21 +65,43 @@ body, html {
 #desktop {
   width: 100vw;
   height: 100vh;
-  background: url('https://picsum.photos/1920/1080') no-repeat center center/cover;
+  background-size: cover;
+  background-position: center;
   position: relative;
 }
 
 /* Top Bar */
 .top-bar {
   height: 35px;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--topbar-bg);
+  color: var(--topbar-text);
   backdrop-filter: blur(5px);
-  color: white;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
   font-size: 0.9rem;
+  transition: background 0.3s, color 0.3s;
+}
+
+.os-logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.top-bar-greeting {
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.theme-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
 }
 
 .top-bar-right {
@@ -91,20 +127,22 @@ body, html {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  flex-wrap: wrap;
+  max-height: calc(100vh - 40px);
+  gap: 1.2rem;
   position: relative;
   z-index: 2;
 }
 
 .icon {
-  width: 70px;
+  width: 75px;
   text-align: center;
   color: white;
   cursor: pointer;
 }
 
 .icon-img {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
 }
 
 .icon span {
@@ -112,20 +150,18 @@ body, html {
   text-shadow: 1px 1px 3px black;
 }
 
-/* Window Layout */
+/* Window Styling */
 .window {
   position: absolute;
-  top: 100px;
-  left: 100px;
-  width: 420px;
-  height: 300px;
-  background: rgba(255, 255, 255, 0.95);
+  width: 440px;
+  height: 360px;
+  background: var(--window-bg);
+  color: var(--window-text);
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  z-index: 10;
 }
 
 .window-header {
@@ -138,7 +174,7 @@ body, html {
   cursor: move;
 }
 
-#close-btn {
+.close-btn {
   background: transparent;
   border: none;
   color: white;
@@ -148,13 +184,13 @@ body, html {
 
 .window-content {
   padding: 1rem;
-  color: #333;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
-/* Notes Textarea */
+/* Notes App */
 .notes-area {
   width: 100%;
   height: 100%;
@@ -165,4 +201,213 @@ body, html {
   resize: none;
   outline: none;
   user-select: text;
+}
+
+/* Calculator App */
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.calc-screen {
+  height: 45px;
+  background: #222;
+  color: #00ff00;
+  font-family: monospace;
+  text-align: right;
+  padding: 10px;
+  font-size: 1.4rem;
+  border-radius: 4px;
+}
+
+.calc-btn {
+  padding: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #ffffff;
+  font-weight: bold;
+}
+
+.calc-btn:hover {
+  background: #eeeeee;
+}
+
+/* Terminal App */
+.terminal-body {
+  background: #111;
+  color: #00ff00;
+  font-family: monospace;
+  height: 100%;
+  padding: 10px;
+  overflow-y: auto;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-input-line {
+  display: flex;
+  margin-top: 5px;
+}
+
+.terminal-input {
+  background: transparent;
+  border: none;
+  color: #00ff00;
+  outline: none;
+  font-family: monospace;
+  flex-grow: 1;
+  margin-left: 5px;
+}
+
+/* Stopwatch & Countdown Timer */
+.timer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  justify-content: center;
+  height: 100%;
+}
+
+.timer-display {
+  font-size: 2.8rem;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.timer-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  background: #007acc;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.timer-input {
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+/* Audio Music Player */
+.player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 15px;
+  text-align: center;
+}
+
+.player-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.player-controls {
+  display: flex;
+  gap: 10px;
+}
+
+/* Snake Game */
+.snake-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+}
+
+.snake-score {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+canvas.snake-canvas {
+  background: #111;
+  border-radius: 4px;
+}
+
+/* Tic-Tac-Toe App */
+.ttt-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.ttt-status {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.ttt-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-template-rows: repeat(3, 70px);
+  gap: 5px;
+}
+
+.ttt-cell {
+  background: #007acc;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.ttt-cell:hover {
+  background: #005999;
+}
+
+.ttt-reset {
+  padding: 5px 15px;
+  background: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Weather App */
+.weather-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: 10px;
+  background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+  color: #111;
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.weather-temp {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.weather-desc {
+  font-size: 1.1rem;
+  text-transform: capitalize;
 }

@@ -8,7 +8,7 @@
 </head>
 <body>
 
-  <!-- Part 1: Welcome Screen -->
+  <!-- Lock / Welcome Screen -->
   <div id="welcome-screen" class="screen">
     <div class="card">
       <h1>Welcome to My OS</h1>
@@ -20,51 +20,79 @@
   <!-- Main OS Environment -->
   <div id="desktop" class="hidden">
     
-    <!-- Part 2: Top Bar with Date & Clock -->
+    <!-- Top Bar -->
     <header class="top-bar">
-      <div class="os-logo">WebOS</div>
+      <div class="os-logo-group">
+        <span class="os-logo">WebOS</span>
+        <span class="top-bar-greeting">heloo</span>
+        <button id="theme-toggle" class="theme-btn" title="Toggle Theme">🌙</button>
+      </div>
       <div class="top-bar-right">
         <span id="date"></span>
         <span id="clock">00:00:00 AM</span>
       </div>
     </header>
 
-    <!-- Centered Welcome Message -->
+    <!-- Centered Desktop Text -->
     <div class="center-text">
       hey its piyushoutthere
     </div>
 
-    <!-- Desktop Workspace & Icons -->
+    <!-- Desktop Icons -->
     <main class="workspace">
-      <!-- About Me App -->
-      <div class="icon" id="open-app-1">
+      <div class="icon" id="open-app-about">
         <div class="icon-img">📁</div>
         <span>About Me</span>
       </div>
 
-      <!-- Working Notes App -->
-      <div class="icon" id="open-notes">
+      <div class="icon" id="open-app-notes">
         <div class="icon-img">📝</div>
         <span>Notes</span>
       </div>
 
-      <!-- Settings App -->
-      <div class="icon" id="open-app-2">
+      <div class="icon" id="open-app-calc">
+        <div class="icon-img">🧮</div>
+        <span>Calculator</span>
+      </div>
+
+      <div class="icon" id="open-app-terminal">
+        <div class="icon-img">💻</div>
+        <span>Terminal</span>
+      </div>
+
+      <div class="icon" id="open-app-timer">
+        <div class="icon-img">⏱️</div>
+        <span>Timer</span>
+      </div>
+
+      <div class="icon" id="open-app-music">
+        <div class="icon-img">🎵</div>
+        <span>Music Player</span>
+      </div>
+
+      <div class="icon" id="open-app-snake">
+        <div class="icon-img">🐍</div>
+        <span>Snake Game</span>
+      </div>
+
+      <div class="icon" id="open-app-ttt">
+        <div class="icon-img">❌</div>
+        <span>Tic-Tac-Toe</span>
+      </div>
+
+      <div class="icon" id="open-app-weather">
+        <div class="icon-img">🌤️</div>
+        <span>Weather</span>
+      </div>
+
+      <div class="icon" id="open-app-settings">
         <div class="icon-img">⚙️</div>
         <span>Settings</span>
       </div>
     </main>
 
-    <!-- App Window -->
-    <div id="app-window" class="window hidden">
-      <div class="window-header" id="window-header">
-        <span id="window-title">App Window</span>
-        <button id="close-btn">&times;</button>
-      </div>
-      <div class="window-content" id="window-content">
-        <!-- Dynamic Content -->
-      </div>
-    </div>
+    <!-- Container for Multiple Draggable Windows -->
+    <div id="windows-container"></div>
 
   </div>
 
