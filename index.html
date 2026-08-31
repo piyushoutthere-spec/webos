@@ -1,97 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Personal Web OS</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>Piyush WebOS</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <!-- Lock / Welcome Screen -->
-  <div id="welcome-screen" class="screen">
-    <div class="card">
-      <h1>Welcome to My OS</h1>
-      <p>Explore my personal interactive web portfolio.</p>
-      <button id="enter-btn">Enter OS</button>
-    </div>
+  <div id="welcome-screen">
+    <h1>Welcome to Piyush OS</h1>
+    <button id="enter-btn">Enter OS</button>
   </div>
 
-  <!-- Main OS Environment -->
+  <!-- Main Desktop Container -->
   <div id="desktop" class="hidden">
     
     <!-- Top Bar -->
-    <header class="top-bar">
-      <div class="os-logo-group">
-        <span class="os-logo">WebOS</span>
-        <span class="top-bar-greeting">heloo</span>
-        <button id="theme-toggle" class="theme-btn" title="Toggle Theme">🌙</button>
-      </div>
-      <div class="top-bar-right">
+    <div id="top-bar">
+      <span>PiyushOS</span>
+      <button id="theme-toggle">Theme</button>
+      <div id="clock-box">
+        <span id="clock"></span>
         <span id="date"></span>
-        <span id="clock">00:00:00 AM</span>
       </div>
-    </header>
-
-    <!-- Centered Desktop Text -->
-    <div class="center-text">
-      hey its piyushoutthere
     </div>
 
-    <!-- Desktop Icons -->
-    <main class="workspace">
-      <div class="icon" id="open-app-about">
-        <div class="icon-img">📁</div>
-        <span>About Me</span>
-      </div>
+    <!-- Desktop App Icons -->
+    <div id="icon-grid">
+      <button id="open-app-about">About</button>
+      <button id="open-app-notes">Notes</button>
+      <button id="open-app-calc">Calc</button>
+      <button id="open-app-terminal">Terminal</button>
+      <button id="open-app-timer">Timer</button>
+      <button id="open-app-music">Music</button>
+      <button id="open-app-snake">Snake</button>
+      <button id="open-app-ttt">TicTacToe</button>
+    </div>
 
-      <div class="icon" id="open-app-notes">
-        <div class="icon-img">📝</div>
-        <span>Notes</span>
-      </div>
-
-      <div class="icon" id="open-app-calc">
-        <div class="icon-img">🧮</div>
-        <span>Calculator</span>
-      </div>
-
-      <div class="icon" id="open-app-terminal">
-        <div class="icon-img">💻</div>
-        <span>Terminal</span>
-      </div>
-
-      <div class="icon" id="open-app-timer">
-        <div class="icon-img">⏱️</div>
-        <span>Timer</span>
-      </div>
-
-      <div class="icon" id="open-app-music">
-        <div class="icon-img">🎵</div>
-        <span>Music Player</span>
-      </div>
-
-      <div class="icon" id="open-app-snake">
-        <div class="icon-img">🐍</div>
-        <span>Snake Game</span>
-      </div>
-
-      <div class="icon" id="open-app-ttt">
-        <div class="icon-img">❌</div>
-        <span>Tic-Tac-Toe</span>
-      </div>
-
-      <div class="icon" id="open-app-weather">
-        <div class="icon-img">🌤️</div>
-        <span>Weather</span>
-      </div>
-
-      <div class="icon" id="open-app-settings">
-        <div class="icon-img">⚙️</div>
-        <span>Settings</span>
-      </div>
-    </main>
-
-    <!-- Container for Multiple Draggable Windows -->
+    <!-- Window Manager Space -->
     <div id="windows-container"></div>
 
   </div>
